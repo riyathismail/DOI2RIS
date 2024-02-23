@@ -1,0 +1,19 @@
+# Install and load rcrossref
+install.packages("rcrossref")
+library(rcrossref)
+
+# Read DOIs from file
+dois <- readLines("doi.txt") 
+
+# Get citations in RIS format 
+citations <- lapply(dois, function(doi) {
+  tryCatch({
+    citation <- cr_cn(doi, format = "ris")
+    return(citation)
+  }, error = function(e) {
+    return(NA)
+  })
+})
+
+# Write to RIS file
+writeLines(unlist(citations), "refenec.ris")
